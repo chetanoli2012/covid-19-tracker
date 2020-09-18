@@ -2,7 +2,6 @@ import React from 'react'
 import './Table.css'
 
 function Table( {countries} ) {
-    console.log('what?',countries);
     return (
         <div className='table'>
             {countries?.map(({ country, cases }) => (
