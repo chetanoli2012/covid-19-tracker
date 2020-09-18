@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { appServices } from './App.services'
 import InfoBox from './InfoBox';
+import LineGraph from './LineGraph';
 import Map from './Map';
 import Table from './Table';
 import { sortData } from './util';
@@ -63,9 +64,7 @@ function App() {
 
   const onCountryChange = async (event) => {
     const countryCode = event.target.value;
-    console.log('country previously', country);
     await setCountry(countryCode);
-    console.log('country afterwards', country);
     await getDataByCountry(countryCode === 'worldwide'? 'all': countryCode);
     
   }
@@ -122,6 +121,7 @@ function App() {
 
           {/* Graph */}
           <h3>Worldwide new cases</h3>
+          <LineGraph />
 
         </CardContent>
       </Card>
