@@ -55,20 +55,16 @@ function LineGraph({ casesType = 'cases' }) {
 
     useEffect(() => {
         const fetchHistoricalData = async () => {
-            await getHistoricalData();
+            const result = await lineGraphServices.getHistoricalData()
+            if (result && result.status === 200) {
+
+                const chartData = buildChartData(result.data);
+                setData(chartData)
+            }
         }
         fetchHistoricalData();
     }, [casesType])
-
-    const getHistoricalData = async () => {
-        const result = await lineGraphServices.getHistoricalData()
-        if (result && result.status === 200) {
-
-            const chartData = buildChartData(result.data);
-            setData(chartData)
-        }
-    }
-
+    
     const buildChartData = (data, casesType = 'cases') => {
         let chartData = [];
         let lastDataPoint = {};
