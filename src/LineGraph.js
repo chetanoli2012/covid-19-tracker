@@ -57,8 +57,7 @@ function LineGraph({ casesType = 'cases' }) {
         const fetchHistoricalData = async () => {
             const result = await lineGraphServices.getHistoricalData()
             if (result && result.status === 200) {
-
-                const chartData = buildChartData(result.data);
+                const chartData = buildChartData(result.data, casesType);
                 setData(chartData)
             }
         }
@@ -67,7 +66,7 @@ function LineGraph({ casesType = 'cases' }) {
     
     const buildChartData = (data, casesType = 'cases') => {
         let chartData = [];
-        let lastDataPoint = {};
+        let lastDataPoint;
         // data[casesType] && data[casesType].forEach(date => {
         for (let date in data.cases) {
             if (lastDataPoint) {
@@ -80,7 +79,6 @@ function LineGraph({ casesType = 'cases' }) {
             lastDataPoint = data[casesType][date];
         };
         return chartData;
-
     }
 
 
