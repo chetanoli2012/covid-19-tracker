@@ -5,6 +5,7 @@ import { appServices } from './App.services'
 import InfoBox from './InfoBox';
 import Map from './Map';
 import Table from './Table';
+import { sortData } from './util';
 
 
 function App() {
@@ -39,8 +40,9 @@ function App() {
         name: country.country,
         value: country?.countryInfo?.iso2
       }));
-      setTableData(result.data)
+      const sortedData = sortData(result.data)
       setCountries(countries)
+      setTableData(sortedData)
     }
 
   }
