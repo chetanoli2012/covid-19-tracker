@@ -6,7 +6,8 @@ import InfoBox from './InfoBox';
 import LineGraph from './LineGraph';
 import Map from './Map';
 import Table from './Table';
-import { sortData } from './util';
+import { prettyPrintStat, sortData } from './util';
+import 'leaflet/dist/leaflet.css';
 
 
 function App() {
@@ -15,6 +16,9 @@ function App() {
   const [country, setCountry] = useState('worldwide');
   const [countryInfo, setCountryInfo] = useState({});
   const [tableData, setTableData] = useState([]);
+  const [mapCenter, setMapCenter] = useState({ lat: 34.10746, lng: -40.4796 });
+  const [mapZoom, setMapZoom] = useState(3);
+  const [mapCountries, setMapCountries] = useState([]);
 
   /**
    * https://disease.sh/v3/covid-19/countries
@@ -41,6 +45,7 @@ function App() {
         name: country.country,
         value: country?.countryInfo?.iso2
       }));
+      setMapCountries(result.data);
       const sortedData = sortData(result.data)
       setCountries(countries)
       setTableData(sortedData)
@@ -49,15 +54,17 @@ function App() {
   }
 
 
-    /**
-   * Method to get the countries data
-   * @param {String} countryCode
-   */
+  /**
+ * Method to get the countries data
+ * @param {String} countryCode
+ */
   const getDataByCountry = async (countryCode = undefined) => {
     // console.log('are we here!');
     const result = await appServices.getDataByCountry(countryCode);
     if (result && result.status === 200) {
-      setCountryInfo(result.data)
+      setCountryInfo(result.data);
+      await setMapCenter([result.data?.countryInfo?.lat || 34.10746, result.data?.countryInfo?.long || -40.4796]);
+      await setMapZoom(result.data?.countryInfo?.lat ? 4 : 3);
     }
 
   }
@@ -65,8 +72,8 @@ function App() {
   const onCountryChange = async (event) => {
     const countryCode = event.target.value;
     await setCountry(countryCode);
-    await getDataByCountry(countryCode === 'worldwide'? 'all': countryCode);
-    
+    await getDataByCountry(countryCode === 'worldwide' ? 'all' : countryCode);
+
   }
 
   console.log('tableDAta', tableData);
@@ -102,12 +109,16 @@ function App() {
         <div className="app__stats">
 
           {/* InfoBoxes */}
-          <InfoBox title='Coronavirus Cases' cases={countryInfo?.todayCases} total={countryInfo?.cases} />
-          <InfoBox title='Recovered' cases={countryInfo?.todayRecovered} total={countryInfo?.recovered} />
-          <InfoBox title='Deaths' cases={countryInfo?.todayDeaths} total= {countryInfo?.deaths} />
+          <InfoBox title='Coronavirus Cases' cases={prettyPrintStat(countryInfo?.todayCases)} total={countryInfo?.cases} />
+          <InfoBox title='Recovered' cases={prettyPrintStat(countryInfo?.todayRecovered)} total={countryInfo?.recovered} />
+          <InfoBox title='Deaths' cases={prettyPrintStat(countryInfo?.todayDeaths)} total={countryInfo?.deaths} />
         </div>
         {/* Map */}
-        <Map />
+        <Map
+          countries={mapCountries}
+          center={mapCenter}
+          zoom={mapZoom}
+        />
 
 
       </div>
@@ -117,7 +128,7 @@ function App() {
           {/* Table */}
           <h3>Live Cases by Country</h3>
 
-          <Table countries = {tableData} />
+          <Table countries={tableData} />
 
           {/* Graph */}
           <h3>Worldwide new cases</h3>
