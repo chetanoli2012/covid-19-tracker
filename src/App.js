@@ -8,10 +8,12 @@ import Map from './components/Map/Map';
 import Table from './components/Table/Table';
 import { prettyPrintStat, sortData } from './util';
 import 'leaflet/dist/leaflet.css';
+import { connect } from "react-redux";
+
+import * as countries from "./store/ducks/countriesData.duck";
 
 
-function App() {
-
+function App(props) {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState('worldwide');
   const [countryInfo, setCountryInfo] = useState({});
@@ -39,13 +41,20 @@ function App() {
    * @param {String} countryCode
    */
   const getCountriesData = async (countryCode = undefined) => {
-    // console.log('are we here!');
-    const result = await appServices.getCountriesData(countryCode);
+    let result = {};
+    const {countriesData} = props;
+    if(countriesData){
+      result.data = countriesData;
+      result.status = 200;
+    }else{
+      result= await appServices.getCountriesData(countryCode);
+    }
     if (result && result.status === 200) {
       const countries = result.data.map((country) => ({
         name: country.country,
         value: country?.countryInfo?.iso2
       }));
+      props.loadCountriesData(result.data);
       setMapCountries(result.data);
       const sortedData = sortData(result.data)
       setCountries(countries)
@@ -60,7 +69,6 @@ function App() {
  * @param {String} countryCode
  */
   const getDataByCountry = async (countryCode = undefined) => {
-    // console.log('are we here!');
     const result = await appServices.getDataByCountry(countryCode);
     if (result && result.status === 200) {
       setCountryInfo(result.data);
@@ -76,9 +84,6 @@ function App() {
     await getDataByCountry(countryCode === 'worldwide' ? 'all' : countryCode);
 
   }
-
-  console.log('tableDAta', tableData);
-
 
   return (
     <div className="app">
