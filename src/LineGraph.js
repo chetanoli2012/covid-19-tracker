@@ -35,7 +35,7 @@ const options = {
         yAxes: [
             {
                 gridLines: {
-                    display: false,
+                    display: true,
                 },
                 ticks: {
                     // Include a $ sign in the ticks
