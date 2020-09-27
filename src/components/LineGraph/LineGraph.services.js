@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosInstanc";
+import axiosInstance from "../../axiosInstance";
 
 /**
  * Method to get countries data

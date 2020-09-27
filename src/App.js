@@ -2,10 +2,10 @@ import { Card, CardContent, FormControl, MenuItem, Select } from '@material-ui/c
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { appServices } from './App.services'
-import InfoBox from './InfoBox';
-import LineGraph from './LineGraph';
-import Map from './Map';
-import Table from './Table';
+import InfoBox from './components/InfoBox/InfoBox';
+import LineGraph from './components/LineGraph/LineGraph';
+import Map from './components/Map/Map';
+import Table from './components/Table/Table';
 import { prettyPrintStat, sortData } from './util';
 import 'leaflet/dist/leaflet.css';
 
@@ -153,7 +153,7 @@ function App() {
           <Table countries={tableData} />
 
           {/* Graph */}
-          <h3 className = 'app__graphTitle'>Worldwide new {casesType}</h3>
+          <h3 className='app__graphTitle'>Worldwide new {casesType}</h3>
           <LineGraph casesType={casesType} />
 
         </CardContent>
