@@ -52,7 +52,6 @@ const options = {
 function LineGraph({ casesType = 'cases'}) {
 
     const [data, setData] = useState({})
-
     useEffect(() => {
         const fetchHistoricalData = async () => {
             const result = await lineGraphServices.getHistoricalData()
@@ -89,8 +88,8 @@ function LineGraph({ casesType = 'cases'}) {
                 data={{
                     datasets: [
                         {
-                            backgroundColor: 'rgba(204, 16, 52, 0.5)',
-                            borderColor: '#CC1034',
+                            backgroundColor: casesType === 'recovered'?'rgba(125, 215, 29, 0.5)': 'rgba(204, 16, 52, 0.5)',
+                            borderColor: casesType === 'recovered'?'#7DD71D':'#CC1034',
                             data: data
                         }
                     ]
