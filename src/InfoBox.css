@@ -32,3 +32,11 @@
   font-size: 0.8rem !important;
   margin-top: 15px !important;
 }
+
+
+/* Media queries */
+@media (max-width: 990px){
+  .infoBox__cases {
+    font-size: 1.0rem;
+  }
+}
