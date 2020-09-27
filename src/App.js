@@ -167,4 +167,12 @@ function App(props) {
   );
 }
 
-export default App;
+const mapStateToProps = state => ({
+  countriesData: state.staticData && state.staticData.countriesData
+});
+
+
+export default connect(
+  mapStateToProps,
+  countries.actions
+)(App)
